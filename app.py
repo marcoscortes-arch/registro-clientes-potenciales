@@ -31,7 +31,7 @@ st.set_page_config(
         margin-bottom: 20px;
     }
 </style>
-""", unsafe_allow_dict_copy=True)
+unsafe_allow_html=True)
 
 st.markdown('<div class="wgh-header">W.G.H. Car Shop</div>', unsafe_allow_dict_copy=True)
 st.markdown('<div class="wgh-sub">Buscador Rápido de Mascarillas y Accesorios</div>', unsafe_allow_dict_copy=True)
