@@ -138,7 +138,7 @@ if not df.empty:
 
                 with col_action_wa:
                     texto_msj = (
-                        f"¡Hola! 👋 Te comparto las imágenes de la *{producto_nombre}* para tu {row['Marca']} {row['Modelo']} que me consultaste:\n\n"
+                        f"¡Hola! 👋 Le comparto las imágenes de la *{producto_nombre}* para tu {row['Marca']} {row['Modelo']} que me consulto:\n\n"
                         f"💰 *Precio:* ${row.get('Precio ($)', row.get('Precio', '0.00'))}\n"
                         f"🔢 *Código/SKU:* {row.get('SKU / Código', 'N/A')}\n\n"
                         f"Aquí puedes ver cómo es y cómo queda:\n"
