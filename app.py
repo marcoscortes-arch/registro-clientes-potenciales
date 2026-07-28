@@ -9,8 +9,8 @@ st.set_page_config(
     page_icon="🚗"
 )
 
-# Estilo personalizado para el logo W.G.H. (Opcional, pero se ve profesional)
-""", unsafe_allow_html=True)
+# Estilo personalizado para el logo W.G.H.
+st.markdown("""
 <style>
     .reportview-container .main .block-container{
         padding-top: 1rem;
@@ -31,13 +31,12 @@ st.set_page_config(
         margin-bottom: 20px;
     }
 </style>
-unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
-st.markdown('<div class="wgh-header">W.G.H. Car Shop</div>', unsafe_allow_dict_copy=True)
-st.markdown('<div class="wgh-sub">Buscador Rápido de Mascarillas y Accesorios</div>', unsafe_allow_dict_copy=True)
+st.markdown('<div class="wgh-header">W.G.H. Car Shop</div>', unsafe_allow_html=True)
+st.markdown('<div class="wgh-sub">Buscador Rápido de Mascarillas y Accesorios</div>', unsafe_allow_html=True)
 
 # 1. Enlace a tu Google Sheet (Publicado como CSV)
-# ASEGÚRATE DE USAR TU ENLACE CSV AQUÍ
 SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSDj39gzuKoA_6SgtWcVs5It-0WSzxGwb5it-9Ja012Al9pw3jpP6Ioxf8VrL66MQ/pub?output=csv"
 
 @st.cache_data(ttl=300)  # Se actualiza automáticamente cada 5 minutos
@@ -58,7 +57,7 @@ def cargar_inventario():
 df = cargar_inventario()
 
 if not df.empty:
-    # 2. Buscador Directo por Palabra Clave (Opcional)
+    # 2. Buscador Directo por Palabra Clave
     st.markdown("### 🔍 Búsqueda Directa")
     busqueda_directa = st.text_input("Busca por SKU, nombre de mascarilla o palabra clave:", "")
 
@@ -72,7 +71,6 @@ if not df.empty:
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            # Limpiar marcas vacías
             marcas = sorted([m for m in df["Marca"].dropna().unique() if str(m).strip()])
             marca_sel = st.selectbox("1. Marca", ["Todas"] + marcas)
 
@@ -87,7 +85,7 @@ if not df.empty:
         with col3:
             anio_sel = st.number_input("3. Año del Vehículo", min_value=1980, max_value=2030, value=2016)
 
-        # Filtrar si el año seleccionado está dentro del rango [Año Inicial, Año Final]
+        # Filtrar si el año seleccionado está dentro del rango
         df_filtrado = df_f2[
             (df_f2["Año Inicial"] <= anio_sel) & 
             (df_f2["Año Final"] >= anio_sel)
@@ -102,11 +100,10 @@ if not df.empty:
     else:
         for _, row in df_filtrado.iterrows():
             with st.container():
-                # Título del producto arriba
                 producto_nombre = row.get("Producto / Descripción", row.get("Producto", "Mascarilla D-Max"))
                 st.markdown(f"#### {producto_nombre} ({row['Año Inicial']}-{row['Año Final']})")
 
-                # Fila para las 3 imágenes (columnas pequeñas)
+                # Fila para las 3 imágenes
                 col_img1, col_img2, col_img3 = st.columns(3)
                 
                 with col_img1:
@@ -140,7 +137,6 @@ if not df.empty:
                         st.caption(f"📍 Ubicación: {row['Ubicación Almacén']}")
 
                 with col_action_wa:
-                    # Crear mensaje formateado para enviar al cliente por WhatsApp (INCLUYENDO LAS 3 FOTOS)
                     texto_msj = (
                         f"¡Hola! 👋 Te comparto las imágenes de la *{producto_nombre}* para tu {row['Marca']} {row['Modelo']} que me consultaste:\n\n"
                         f"💰 *Precio:* ${row.get('Precio ($)', row.get('Precio', '0.00'))}\n"
@@ -148,7 +144,6 @@ if not df.empty:
                         f"Aquí puedes ver cómo es y cómo queda:\n"
                     )
                     
-                    # Agregar enlaces de imágenes si existen
                     if url_img1 and url_img1.startswith("http"):
                         texto_msj += f"1️⃣ *Producto:* {url_img1}\n"
                     if url_img2 and url_img2.startswith("http"):
@@ -159,10 +154,8 @@ if not df.empty:
                     texto_msj += "\n¿Te gustaría coordinar el envío o la instalación? Quedo atento. 🚗💨"
 
                     texto_encoded = urllib.parse.quote(texto_msj)
-                    # Usar api.whatsapp.com para mejor compatibilidad móvil
                     link_wa = f"https://api.whatsapp.com/send?text={texto_encoded}"
 
-                    # Botón grande y rojo estilo WGH
                     st.markdown(f"""
                     <a href="{link_wa}" target="_blank" style="text-decoration: none;">
                         <button style="
@@ -179,6 +172,6 @@ if not df.empty:
                             📲 Enviar 3 Fotos por WhatsApp
                         </button>
                     </a>
-                    """, unsafe_allow_dict_copy=True)
+                    """, unsafe_allow_html=True)
                 
                 st.divider()
