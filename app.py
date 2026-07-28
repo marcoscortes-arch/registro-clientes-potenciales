@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # Estilo personalizado para el logo W.G.H. (Opcional, pero se ve profesional)
-st.markdown("""
+""", unsafe_allow_html=True)
 <style>
     .reportview-container .main .block-container{
         padding-top: 1rem;
